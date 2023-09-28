@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@sovereign/core": {
+      "signature": "c984ce1d2c4763e1e3411e6fa68f0aee",
+      "file": true,
+      "replaced": "^0.1.0"
+    }
+  }
+}

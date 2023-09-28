@@ -1,0 +1,30 @@
+{
+	"private": true,
+	"type": "module",
+	"main": "build/index.mjs",
+	"scripts": {
+		"serve:dev": "sovereign",
+		"build": "sovereign build",
+		"build:worker": "worktop build workers/index.js --minify && cp workers/cfw.json build/",
+		"serve:prod": "sovereign serve",
+		"dev:worker": "wrangler dev src/worker/index.js --port 5000",
+		"format": "prettier --write --ignore-path .gitignore ."
+	},
+	"dependencies": {
+		"@rschristian/intrepid-design": "^0.1.3",
+		"@rschristian/twind-wmr": "^0.3.0",
+		"@twind/core": "^1.1.3",
+		"@twind/preset-tailwind": "^1.1.4",
+		"preact": "^10.13.0",
+		"preact-iso": "^2.3.1"
+	},
+	"devDependencies": {
+		"@sovereign/core": "file:.yalc/@sovereign/core",
+		"cfw": "^0.3.0",
+		"miniflare": "^3.0.0",
+		"preact-render-to-string": "^6.2.0",
+		"worktop": "^0.8.0-next.15",
+		"wrangler": "^3.9.0"
+	},
+	"prettier": "prettier-config-rschristian"
+}
