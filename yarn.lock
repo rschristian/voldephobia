@@ -943,6 +943,16 @@ preact@^10.13.0:
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.17.1.tgz#0a1b3c658c019e759326b9648c62912cf5c2dde1"
   integrity sha512-X9BODrvQ4Ekwv9GURm9AKAGaomqXmip7NQTZgY7gcNmr7XE83adOMJvd3N42id1tMFU7ojiynRsYnY6/BRFxLA==
 
+prettier-config-rschristian@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/prettier-config-rschristian/-/prettier-config-rschristian-0.1.1.tgz#59efad3002a0a915c28019ed7ea2b2c8f875115e"
+  integrity sha512-PRs3vZn+1PTGTTtDfdDZdrhzLhQCu4Qe5HxWo1R3Ui2R8X2PX5rKEg7NOfZbvjla0686+nYocV3mDOhMz2D4WQ==
+
+prettier@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.3.tgz#432a51f7ba422d1469096c0fdc28e235db8f9643"
+  integrity sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==
+
 pretty-format@^3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-3.8.0.tgz#bfbed56d5e9a776645f4b1ff7aa1a3ac4fa3c385"
