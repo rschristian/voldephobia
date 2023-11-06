@@ -14,9 +14,7 @@ export interface ModuleInfo {
     dependencies?: Module[];
 }
 
-export interface Graph {
-    modules: Map<string, ModuleInfo>;
-}
+type Graph = Map<string, ModuleInfo>;
 
 // registry
 export interface PackageData {

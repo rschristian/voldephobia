@@ -20,7 +20,7 @@ API.add('GET', '/pkg/*', async (_req, context) => {
     let moduleTree = {};
     try {
         const [entryModule, graph] = await walkModuleGraph(pkgQuery);
-        moduleTree = formTreeFromGraph(graph.modules.get(entryModule.key), graph);
+        moduleTree = formTreeFromGraph(graph.get(entryModule.key), graph);
     } catch (e) {
         return reply(404, JSON.stringify({ error: e.message }), headers);
     }
@@ -42,22 +42,20 @@ listen(API.run);
  */
 async function walkModuleGraph(query) {
     /** @type {Graph} */
-    const graph = {
-        modules: new Map(),
-    };
+    const graph = new Map();
 
     /**
      * @param {Module} module
      * @param {number} [level=0]
      */
-    const walk = async (module, level = 0) => {
+    const _walk = async (module, level = 0) => {
         if (!module) return Promise.reject(new Error('Module not found'));
 
         if (Array.isArray(module)) {
-            return Promise.all(module.map((m) => walk(m, level)));
+            return Promise.all(module.map((m) => _walk(m, level)));
         }
 
-        if (graph.modules.has(module.key)) {
+        if (graph.has(module.key)) {
             return Promise.resolve();
         }
 
@@ -72,12 +70,12 @@ async function walkModuleGraph(query) {
             level,
             poisoned: JSON.stringify(module.pkg).includes('ljharb'),
         };
-        graph.modules.set(module.key, info);
+        graph.set(module.key, info);
 
         return Promise.all(
             deps.map(async (dep) => {
                 const module = await getModule(dep.name, dep.version);
-                await walk(module, level + 1);
+                await _walk(module, level + 1);
 
                 return module;
             }),
@@ -85,7 +83,7 @@ async function walkModuleGraph(query) {
     };
 
     const module = await getModule(query);
-    if (module) await walk(module);
+    if (module) await _walk(module);
     return [module, graph];
 }
 
@@ -103,13 +101,14 @@ function formTreeFromGraph(entryModule, graph) {
     const _walk = (module, parent) => {
         const m = {
             name: module.module.pkg.name,
+            version: module.module.pkg.version,
             poisoned: module.poisoned,
             ...(module.dependencies.length && { dependencies: [] }),
         };
 
         if (module.dependencies.length) {
             for (const dep of module.dependencies) {
-                _walk(graph.modules.get(dep.key), m);
+                _walk(graph.get(dep.key), m);
             }
         }
 
