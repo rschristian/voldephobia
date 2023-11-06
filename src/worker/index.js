@@ -64,11 +64,13 @@ async function walkModuleGraph(query) {
             deps.push({ name, version });
         }
 
+        const { dependencies, devDependencies, peerDependencies, ...pkgWithoutDeps } = module.pkg;
+
         /** @type {ModuleInfo} */
         const info = {
             module,
             level,
-            poisoned: JSON.stringify(module.pkg).includes('ljharb'),
+            poisoned: JSON.stringify(pkgWithoutDeps).includes('ljharb'),
         };
         graph.set(module.key, info);
 

@@ -86,9 +86,9 @@ export async function getModule(name, version) {
                     })
                 ).json();
             } catch (e) {
-                console.log(e);
+                throw new Error(e);
             }
-            if (pkg.error) throw new Error(pkg.error);
+            if (pkg?.error) throw new Error(pkg.error);
 
             version = getSatisfyingSemverVersion(pkg, version);
         }

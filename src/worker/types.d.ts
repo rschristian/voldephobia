@@ -1,10 +1,7 @@
 // index
 export interface Module {
     key: string;
-    pkg: {
-        name: string;
-        dependencies: Record<string, string>;
-    };
+    pkg: PackageData;
 }
 
 export interface ModuleInfo {
@@ -20,8 +17,10 @@ type Graph = Map<string, ModuleInfo>;
 export interface PackageData {
     name: string;
     version: string;
-    dependencies: Record<string, string>;
-    maintainers: { name: string; email: string }[];
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    peerDependencies?: Record<string, string>;
+    maintainers?: { name: string; email: string }[];
 }
 
 export interface ModuleCacheEntry {
