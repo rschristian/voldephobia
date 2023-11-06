@@ -6,23 +6,38 @@ import { getModule } from './registry.js';
 
 const API = new Router();
 
+const headers = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400',
+    'Access-Control-Allow-Origin': '*',
+};
+
+/**
+ * @param {number} status
+ * @param {string} message
+ */
+function errorResponse(status, message) {
+    // Normalize error messages, as NPM isn't consistent with its responses
+    if (!message.startsWith('Error: ')) message = `Error: ${message}`;
+    return reply(status, JSON.stringify({ error: message }), headers);
+}
+
 API.add('GET', '/pkg/*', async (_req, context) => {
-    const pkgQuery = decodeURIComponent(context.params.wild);
+    const pkgQuery = decodeURIComponent(context.params.wild.toLowerCase());
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400',
-        'Access-Control-Allow-Origin': '*',
-    };
-
-    if (!pkgQuery) return reply(400, 'Missing package query', headers);
+    if (!pkgQuery) return errorResponse(400, 'Missing package query');
+    if (!/^(?:@.+\/[a-z]|[a-z])/.test(pkgQuery))
+        return errorResponse(
+            400,
+            'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
+        );
 
     let moduleTree = {};
     try {
         const [entryModule, graph] = await walkModuleGraph(pkgQuery);
         moduleTree = formTreeFromGraph(graph.get(entryModule.key), graph);
     } catch (e) {
-        return reply(404, JSON.stringify({ error: e.message }), headers);
+        return errorResponse(e.message === 'Not found' ? 404 : 500, e.message);
     }
 
     return reply(200, JSON.stringify(moduleTree), headers);
