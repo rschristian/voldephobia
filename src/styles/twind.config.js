@@ -7,22 +7,30 @@ export const twindConfig = defineConfig({
     hash: false,
     theme: {
         colors: {
-            primary: '#ff6666aa',
+            primary: {
+                dim: '#228822',
+                DEFAULT: '#44bb44',
+            },
+            red: '#ff4444',
             content: {
                 DEFAULT: '#24292f',
                 dark: '#eee',
             },
             page: {
-                DEFAULT: '#f8f8f8',
+                DEFAULT: '#f6faf6',
                 dark: '#1a201a',
             },
-            resource: {
-                DEFAULT: '#eee',
-                dark: '#151515',
-                border: {
-                    DEFAULT: '#000',
-                    dark: '#bbb',
-                },
+            card: {
+                DEFAULT: '#f1f3f0',
+                dark: '#121612',
+            },
+            input: {
+                DEFAULT: '#fff',
+                dark: '#eee',
+            },
+            highlight: {
+                DEFAULT: '#ccc',
+                dark: '#333',
             },
             white: {
                 muted: '#999',
