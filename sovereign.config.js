@@ -1,3 +1,6 @@
-import { defineConfig } from '@sovereign/core';
+import { defineConfig } from '@sovereignjs/core';
+import groupingPlugin from 'vite-plugin-tailwind-grouping';
 
-export default defineConfig({});
+export default defineConfig({
+    plugins: [groupingPlugin()],
+});
