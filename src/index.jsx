@@ -54,31 +54,29 @@ export function App() {
                 <Header.ThemeToggle />
             </Header>
             <Main widthStyle="flex justify-center w-full lg:max-w-6xl">
-                <div>
-                    <div class="lg:mt-32 p-8 w-full text-center bg-card(& dark:dark) rounded-xl">
-                        <h1 class="text-4xl font-bold">Voldephobia</h1>
-                        <p class="p-2">
-                            Find out if your dependency tree is plagued with packages from You-Know-Who
-                        </p>
-                        <form onSubmit={onSubmit}>
-                            <input
-                                autocorrect="off"
-                                autocapitalize="none"
-                                enterkeyhint="search"
-                                class="my-8 py-2 px-4 w-full text(3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
-                                placeholder="Provide a package name"
-                                value={pkgQuery}
-                                onInput={(e) =>
-                                    setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
-                                }
-                            />
-                        </form>
-                        <p class="text-xs">
-                            This is mostly a joke, but the resistance to modernizing is disconcerting
-                        </p>
-                        {inProgress && <span class="loader mt-8 p-4"></span>}
-                        {serverRes && <DataBox serverRes={serverRes} />}
-                    </div>
+                <div class="h-fit lg:mt-32 p(4 md:8) text-center bg-card(& dark:dark) rounded-xl">
+                    <h1 class="text-4xl font-bold">Voldephobia</h1>
+                    <p class="p-2">
+                        Find out if your dependency tree is plagued with packages from You-Know-Who
+                    </p>
+                    <form onSubmit={onSubmit}>
+                        <input
+                            autocorrect="off"
+                            autocapitalize="none"
+                            enterkeyhint="search"
+                            class="my-8 py-2 px-4 w-full text(3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
+                            placeholder="Provide a package name"
+                            value={pkgQuery}
+                            onInput={(e) =>
+                                setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
+                            }
+                        />
+                    </form>
+                    <p class="text-xs">
+                        This is mostly a joke, but the resistance to modernizing is disconcerting
+                    </p>
+                    {inProgress && <span class="loader mt-8 p-4"></span>}
+                    {serverRes && <DataBox serverRes={serverRes} />}
                 </div>
             </Main>
             <Footer year={2023} />
