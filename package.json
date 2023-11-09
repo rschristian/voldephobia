@@ -1,13 +1,11 @@
 {
   "private": true,
   "type": "module",
-  "main": "build/index.mjs",
   "scripts": {
-    "serve:dev": "sovereign",
+    "serve:dev": "yarn dev:worker -- -- sovereign",
+    "dev:worker": "wrangler pages dev --port 5000 --proxy 3000",
     "build": "sovereign build",
-    "build:worker": "worktop build workers/index.js --minify && cp workers/cfw.json build/",
-    "serve:prod": "sovereign serve",
-    "dev:worker": "wrangler dev src/worker/index.js --port 5000",
+    "serve:prod": "yarn dev:worker -- -- sovereign serve",
     "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
@@ -22,13 +20,11 @@
   "devDependencies": {
     "@sovereign/core": "file:.yalc/@sovereign/core",
     "@types/semver": "^7.5.4",
-    "cfw": "^0.3.0",
     "miniflare": "^3.0.0",
     "preact-render-to-string": "^6.2.0",
     "prettier": "^3.0.3",
     "prettier-config-rschristian": "^0.1.1",
-    "worktop": "^0.8.0-next.15",
-    "wrangler": "^3.9.0"
+    "wrangler": "^3.15.0"
   },
   "prettier": "prettier-config-rschristian"
 }

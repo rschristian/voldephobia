@@ -1,10 +1,4 @@
-import { Router } from 'worktop';
-import { reply } from 'worktop/response';
-import { listen } from 'worktop/cfw';
-
 import { getModule } from './registry.js';
-
-const API = new Router();
 
 const headers = {
     'Content-Type': 'application/json',
@@ -19,11 +13,11 @@ const headers = {
 function errorResponse(status, message) {
     // Normalize error messages, as NPM isn't consistent with its responses
     if (!message.startsWith('Error: ')) message = `Error: ${message}`;
-    return reply(status, JSON.stringify({ error: message }), headers);
+    return new Response(JSON.stringify({ error: message }), { status, headers });
 }
 
-API.add('GET', '/pkg/*', async (_req, context) => {
-    const pkgQuery = decodeURIComponent(context.params.wild.toLowerCase());
+export async function onRequestGet(context) {
+    const pkgQuery = decodeURIComponent(context.params.pkgQuery[0].toLowerCase());
 
     if (!pkgQuery) return errorResponse(400, 'Missing package query');
     if (!/^(?:@.+\/[a-z]|[a-z])/.test(pkgQuery))
@@ -40,10 +34,8 @@ API.add('GET', '/pkg/*', async (_req, context) => {
         return errorResponse(e.message === 'Not found' ? 404 : 500, e.message);
     }
 
-    return reply(200, JSON.stringify(moduleTree), headers);
-});
-
-listen(API.run);
+    return new Response(JSON.stringify(moduleTree), { status: 200, headers });
+}
 
 /**
  * @typedef {import('./types.d.ts').Module} Module

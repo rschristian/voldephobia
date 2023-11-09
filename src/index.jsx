@@ -2,9 +2,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { Root, Main, Header, Footer } from '@rschristian/intrepid-design';
 import { withTwind } from '@rschristian/twind-wmr';
 
-const API_URL = import.meta.env.NODE_ENV !== 'production'
-    ? 'http://localhost:5000'
-    : 'https://vold-api.rchristian.dev';
+const API_URL = import.meta.env.NODE_ENV !== 'production' ? 'http://localhost:5000' : '';
 
 export function App() {
     const [pkgQuery, setPkgQuery] = useState('');
