@@ -17,7 +17,10 @@ function errorResponse(status, message) {
 }
 
 export async function onRequestGet(context) {
-    const pkgQuery = decodeURIComponent(context.params.pkgQuery[0].toLowerCase());
+    let pkgQuery;
+    try {
+        pkgQuery = decodeURIComponent(context.params.pkgQuery[0].toLowerCase());
+    } catch {}
 
     if (!pkgQuery) return errorResponse(400, 'Missing package query');
     if (!/^(?:@.+\/[a-z]|[a-z])/.test(pkgQuery))
