@@ -52,7 +52,7 @@ export function App() {
                 <Header.ThemeToggle />
             </Header>
             <Main widthStyle="flex justify-center w-full lg:max-w-6xl">
-                <div class="h-fit lg:mt-32 p(4 md:8) text-center bg-card(& dark:dark) rounded-xl">
+                <div class="h-fit w-full lg:mt-32 p(4 md:8) text-center bg-card(& dark:dark) rounded-xl">
                     <h1 class="text-4xl font-bold">Voldephobia</h1>
                     <p class="p-2">
                         Find out if your dependency tree is plagued with packages from You-Know-Who

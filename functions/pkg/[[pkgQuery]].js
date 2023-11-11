@@ -58,10 +58,6 @@ async function walkModuleGraph(query) {
     const _walk = async (module, level = 0) => {
         if (!module) return Promise.reject(new Error('Module not found'));
 
-        if (Array.isArray(module)) {
-            return Promise.all(module.map((m) => _walk(m, level)));
-        }
-
         if (graph.has(module.key)) {
             return Promise.resolve();
         }
