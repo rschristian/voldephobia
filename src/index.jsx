@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { Root, Main, Header, Footer } from '@rschristian/intrepid-design';
 import { withTwind } from '@rschristian/twind-wmr';
 
@@ -83,12 +83,42 @@ export function App() {
 }
 
 function DataBox({ serverRes }) {
+    const container = useRef(null);
+    let mouseDown = false;
+    let startX, scrollLeft;
+
+    const startDragging = (e) => {
+        e.preventDefault();
+        mouseDown = true;
+        startX = e.pageX - container.current.offsetLeft;
+        scrollLeft = container.current.scrollLeft;
+        container.current.style.cursor = 'grabbing';
+    }
+
+    const stopDragging = () => {
+        mouseDown = false;
+        container.current.style.cursor = 'grab';
+    }
+
+    const move = (e) => {
+        e.preventDefault();
+        if (!mouseDown) return;
+        const x = e.pageX - container.current.offsetLeft;
+        const scroll = x - startX;
+        container.current.scrollLeft = scrollLeft - scroll;
+    }
+
     return (
         <>
             <section
+                ref={container}
                 class={`mt-8 p-4 overflow-x-auto border(& ${
                     serverRes.error ? 'red' : 'primary-dim'
-                } 1) rounded`}
+                } 1) rounded cursor-grab`}
+                onMouseMove={move}
+                onMouseDown={startDragging}
+                onMouseUp={stopDragging}
+                onMouseLeave={stopDragging}
             >
                 {serverRes.error ? serverRes.error : <PackageTree pkg={serverRes} />}
             </section>
