@@ -17,44 +17,44 @@ Navigate to <a href="https://voldephobia.rschristian.dev">voldephobia.rschristia
 
 ## API
 
-In the off chance you'd like to interact with the data yourself, using it for another application, the API is deployed as a Cloudflare Worker and is available at <a href="https://voldephobia.rschristian.dev/pkg/">voldephobia.rschristian.dev/pkg/*</a>. Simply provide the package query (pkgName or pkgName@version), URL encoded, and the API will do the rest.
+In the off chance you'd like to interact with the data yourself, using it for another application, the API is deployed as a Cloudflare Worker and is available at <a href="https://voldephobia.rschristian.dev/pkg/">voldephobia.rschristian.dev/pkg/\*</a>. Simply provide the package query (pkgName or pkgName@version), URL encoded, and the API will do the rest.
 
 Here's an example of the response data structure:
 
 ```json
 {
-  "name": "get-intrinsic",
-  "version": "1.2.2",
-  "poisoned": true,
-  "dependencies": [
-    {
-      "name": "function-bind",
-      "version": "1.1.2",
-      "poisoned": true
-    },
-    {
-      "name": "has-proto",
-      "version": "1.0.1",
-      "poisoned": true
-    },
-    {
-      "name": "has-symbols",
-      "version": "1.0.3",
-      "poisoned": true
-    },
-    {
-      "name": "hasown",
-      "version": "2.0.0",
-      "poisoned": true,
-      "dependencies": [
+    "name": "get-intrinsic",
+    "version": "1.2.2",
+    "poisoned": true,
+    "dependencies": [
         {
-          "name": "function-bind",
-          "version": "1.1.2",
-          "poisoned": true
+            "name": "function-bind",
+            "version": "1.1.2",
+            "poisoned": true
+        },
+        {
+            "name": "has-proto",
+            "version": "1.0.1",
+            "poisoned": true
+        },
+        {
+            "name": "has-symbols",
+            "version": "1.0.3",
+            "poisoned": true
+        },
+        {
+            "name": "hasown",
+            "version": "2.0.0",
+            "poisoned": true,
+            "dependencies": [
+                {
+                    "name": "function-bind",
+                    "version": "1.1.2",
+                    "poisoned": true
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
