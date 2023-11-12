@@ -1,5 +1,11 @@
 <h1 align="center">Voldephobia</h1>
 
+<p align="center">
+  <picture width="100">
+    <img src="./src/assets/favicon.svg?raw=true">
+  </picture>
+</p>
+
 <p align="center">A silly little tool to find out if your dependency tree is plagued with packages from You-Know-Who</p>
 
 ---
