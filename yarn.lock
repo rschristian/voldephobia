@@ -556,10 +556,10 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
-"@rschristian/intrepid-design@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@rschristian/intrepid-design/-/intrepid-design-0.1.3.tgz#02b0e456d35a005c73c4d853ee53fff48464a836"
-  integrity sha512-yAfiUFXjTPaOHtAERlyKDVQ2bggILCy8iBYqJaNSKPhG3fpzxTB7uLul6vYgZv8NxlxoF9HlQ/hgMlWxGfTaBw==
+"@rschristian/intrepid-design@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@rschristian/intrepid-design/-/intrepid-design-0.1.4.tgz#1115d77cf2e1cf5c71367c96073b00442723f947"
+  integrity sha512-k9Ih0oRu4q4SQ3dDssosqqsrMUCcJbV5VVHlGZLf59GDRBbox/aveXnBg4lmGkG6wWJ1H6LkH2+KiyX9kS8jqg==
 
 "@rschristian/twind-wmr@^0.3.0":
   version "0.3.0"

@@ -9,9 +9,9 @@
     "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@sovereignjs/core": "^0.1.0",
-    "@rschristian/intrepid-design": "^0.1.3",
+    "@rschristian/intrepid-design": "^0.1.4",
     "@rschristian/twind-wmr": "^0.3.0",
+    "@sovereignjs/core": "^0.1.0",
     "@twind/core": "^1.1.3",
     "@twind/preset-tailwind": "^1.1.4",
     "preact": "^10.13.0",
