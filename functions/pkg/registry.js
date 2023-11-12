@@ -102,7 +102,7 @@ export async function getModule(name, version) {
         try {
             pkg = await (await fetch(`${NPM_REGISTRY}/${name}/${version}`)).json();
         } catch (e) {
-            console.log(e);
+            throw new Error(e);
         }
 
         cacheEntry.module = {

@@ -58,6 +58,10 @@ Here's an example of the response data structure:
 }
 ```
 
+## Acknowledgements
+
+Much of the registry/module graph code was adopted from [`npmgraph`](https://github.com/npmgraph/npmgraph), the license of which can be found [here](https://github.com/npmgraph/npmgraph/blob/main/LICENSE).
+
 ## License
 
 [MIT](https://github.com/rschristian/voldephobia/blob/master/LICENSE)

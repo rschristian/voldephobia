@@ -1100,10 +1100,10 @@ mime@^3.0.0:
   resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
   integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
 
-miniflare@*:
-  version "3.20231025.1"
-  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20231025.1.tgz#7c5d2f36f110046a6a42442c4b3acc6ea5afc559"
-  integrity sha512-zwvu/f6eivBBF2shuom5DibnZjGSxt6FiC8sZlj+CcqTRss1D2ZHYD09odhAZLY9DYXE0orBFkJKnIDx/QmYdQ==
+miniflare@3.20231025.0:
+  version "3.20231025.0"
+  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20231025.0.tgz#1b27c21b6cdc6f927da77ddc96fe2e0a5e0fa248"
+  integrity sha512-pFcr2BRaGIQ26UfdDo8BMJ6kkd/Jo/FkQ/4K7UG/eORlDepsLrR/sTJddcSSIGl07MA+MGjhzopFTPpFskkS+g==
   dependencies:
     acorn "^8.8.0"
     acorn-walk "^8.2.0"
@@ -1118,10 +1118,10 @@ miniflare@*:
     youch "^3.2.2"
     zod "^3.20.6"
 
-miniflare@3.20231025.0:
-  version "3.20231025.0"
-  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20231025.0.tgz#1b27c21b6cdc6f927da77ddc96fe2e0a5e0fa248"
-  integrity sha512-pFcr2BRaGIQ26UfdDo8BMJ6kkd/Jo/FkQ/4K7UG/eORlDepsLrR/sTJddcSSIGl07MA+MGjhzopFTPpFskkS+g==
+miniflare@^3.0.0:
+  version "3.20231025.1"
+  resolved "https://registry.yarnpkg.com/miniflare/-/miniflare-3.20231025.1.tgz#7c5d2f36f110046a6a42442c4b3acc6ea5afc559"
+  integrity sha512-zwvu/f6eivBBF2shuom5DibnZjGSxt6FiC8sZlj+CcqTRss1D2ZHYD09odhAZLY9DYXE0orBFkJKnIDx/QmYdQ==
   dependencies:
     acorn "^8.8.0"
     acorn-walk "^8.2.0"

@@ -103,8 +103,7 @@ function DataBox({ serverRes }) {
     const move = (e) => {
         e.preventDefault();
         if (!mouseDown) return;
-        const x = e.pageX - container.current.offsetLeft;
-        const scroll = x - startX;
+        const scroll = (e.pageX - container.current.offsetLeft) - startX;
         container.current.scrollLeft = scrollLeft - scroll;
     }
 
