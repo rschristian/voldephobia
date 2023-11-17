@@ -80,14 +80,16 @@ async function walkModuleGraph(query) {
         };
         graph.set(module.key, info);
 
-        return Promise.all(
+        const resolvedDeps = await Promise.all(
             deps.map(async (dep) => {
                 const module = await getModule(dep.name, dep.version);
                 await _walk(module, level + 1);
 
                 return module;
             }),
-        ).then((deps) => (info.dependencies = deps));
+        );
+
+        return (info.dependencies = resolvedDeps);
     };
 
     const module = await getModule(query);

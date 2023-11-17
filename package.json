@@ -25,7 +25,7 @@
     "miniflare": "^3.0.0",
     "prettier": "^3.0.3",
     "prettier-config-rschristian": "^0.1.1",
-    "wrangler": "^3.15.0"
+    "wrangler": "^3.16.0"
   },
   "packageManager": "yarn@1.22.19",
   "prettier": "prettier-config-rschristian"
