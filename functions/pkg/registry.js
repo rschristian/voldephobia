@@ -43,15 +43,36 @@ function createModuleKey(name, version) {
 /**
  * @param {PackageMetaData} pkg
  * @param {string}[targetVersion='latest']
+ * @returns {string}
  */
 function getSatisfyingSemverVersion(pkg, targetVersion = 'latest') {
     const distVersion = pkg['dist-tags']?.[targetVersion];
     if (distVersion) return distVersion;
 
     // Newer versions are probably more highly used, so start from the end (newest)
+    // Note: `semver` provides a `.maxSatisfying` method but it's far slower than this
     for (const version of Object.keys(pkg.versions).reverse()) {
         if (semver.satisfies(version, targetVersion)) return version;
     }
+}
+
+/**
+ * Converts `^1.2.3` to `1.x.x` to get better cache hits
+ *
+ * @param {string} version
+ * @returns {string}
+ */
+function getSemverXRange(version) {
+    if (/^\d/.test(version)) return version;
+    const [majorWithRange, minor] = version.split('.');
+    const major = majorWithRange.slice(1);
+
+    return majorWithRange.startsWith('^')
+        ? `${major}.x.x`
+        : majorWithRange.startsWith('~') && minor
+            ? `${major}.${minor}.x`
+            // Why in the world is `~1` valid?
+            : `${major}.x.x`;
 }
 
 /**
@@ -62,7 +83,7 @@ function getSatisfyingSemverVersion(pkg, targetVersion = 'latest') {
 export async function getModule(name, version) {
     ({ name, version } = normalizeModuleInfo(name, version));
 
-    const cacheKey = createModuleKey(name, version);
+    const cacheKey = createModuleKey(name, version && getSemverXRange(version));
 
     const cachedModule = moduleCache.get(cacheKey);
     if (cachedModule) return cachedModule.resolve;
@@ -78,9 +99,7 @@ export async function getModule(name, version) {
             /** @type {PackageMetaData} */
             const pkgMeta = await (await fetch(`${NPM_REGISTRY}/${name}`)).json();
 
-            // NPM, for some reason, returns a string rather than an
-            // object w/ an `error` property here. Yay for consistent APIs!
-            if (typeof pkg === 'string') throw new Error(pkg);
+            if (pkgMeta?.error) throw new Error(pkgMeta.error);
 
             version = getSatisfyingSemverVersion(pkgMeta, version);
             pkg = pkgMeta.versions[version];
@@ -92,8 +111,6 @@ export async function getModule(name, version) {
             key: createModuleKey(name, version),
             pkg,
         };
-
-        moduleCache.set(cacheEntry.module.key, cacheEntry);
 
         return cacheEntry.module;
     })();
