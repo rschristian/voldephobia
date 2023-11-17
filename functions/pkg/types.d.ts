@@ -28,7 +28,7 @@ export interface ModuleCacheEntry {
     module: Module;
 }
 
-export interface AbbreviatedMetaData {
+export interface PackageMetaData {
     'dist-tags'?: Record<string, string>;
     versions: Record<string, PackageData>;
     error?: string;

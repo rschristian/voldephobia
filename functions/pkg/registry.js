@@ -7,7 +7,7 @@ const moduleCache = new Map();
  * @typedef {import('./types.d.ts').Module} Module
  * @typedef {import('./types.d.ts').PackageData} PackageData
  * @typedef {import('./types.d.ts').ModuleCacheEntry} ModuleCacheEntry
- * @typedef {import('./types.d.ts').AbbreviatedMetaData} AbbreviatedMetaData
+ * @typedef {import('./types.d.ts').PackageMetaData} PackageMetaData
  */
 
 /**
@@ -41,7 +41,7 @@ function createModuleKey(name, version) {
 }
 
 /**
- * @param {AbbreviatedMetaData} pkg
+ * @param {PackageMetaData} pkg
  * @param {string}[targetVersion='latest']
  */
 function getSatisfyingSemverVersion(pkg, targetVersion = 'latest') {
@@ -72,42 +72,21 @@ export async function getModule(name, version) {
     moduleCache.set(cacheKey, cacheEntry);
 
     cacheEntry.resolve = (async () => {
-        if (!version || !semver.valid(version)) {
-            /** @type {AbbreviatedMetaData} */
-            let pkg;
-            try {
-                pkg = await (
-                    await fetch(`${NPM_REGISTRY}/${name}`, {
-                        // Returns abbreviated version, with a few less fields:
-                        // https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md
-                        headers: {
-                            Accept: 'application/vnd.npm.install-v1+json',
-                        },
-                    })
-                ).json();
-            } catch (e) {
-                throw new Error(e);
-            }
-            if (pkg?.error) throw new Error(pkg.error);
-
-            version = getSatisfyingSemverVersion(pkg, version);
-        }
-
-        if (!version) {
-            throw new Error(`Could not find sufficient version for ${cacheKey}`);
-        }
-
         /** @type {PackageData} */
         let pkg;
         try {
-            pkg = await (await fetch(`${NPM_REGISTRY}/${name}/${version}`)).json();
+            /** @type {PackageMetaData} */
+            const pkgMeta = await (await fetch(`${NPM_REGISTRY}/${name}`)).json();
+
+            // NPM, for some reason, returns a string rather than an
+            // object w/ an `error` property here. Yay for consistent APIs!
+            if (typeof pkg === 'string') throw new Error(pkg);
+
+            version = getSatisfyingSemverVersion(pkgMeta, version);
+            pkg = pkgMeta.versions[version];
         } catch (e) {
             throw new Error(e);
         }
-
-        // NPM, for some reason, returns a string rather than an
-        // object w/ an `error` property here. Yay for consistent APIs!
-        if (typeof pkg === 'string') throw new Error(pkg);
 
         cacheEntry.module = {
             key: createModuleKey(name, version),
