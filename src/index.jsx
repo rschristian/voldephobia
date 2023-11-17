@@ -97,7 +97,7 @@ function DataBox({ serverRes }) {
 
     const stopDragging = () => {
         mouseDown = false;
-        container.current.style.cursor = 'grab';
+        container.current.style.removeProperty('cursor');
     }
 
     const move = (e) => {
@@ -113,7 +113,7 @@ function DataBox({ serverRes }) {
                 ref={container}
                 class={`mt-8 p-4 overflow-x-auto border(& ${
                     serverRes.error ? 'red' : 'primary-dim'
-                } 1) rounded cursor-grab`}
+                } 1) rounded ${serverRes.error ? '' : 'cursor-grab'}`}
                 onMouseMove={move}
                 onMouseDown={startDragging}
                 onMouseUp={stopDragging}

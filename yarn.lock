@@ -1402,10 +1402,10 @@ update-browserslist-db@^1.0.13:
     escalade "^3.1.1"
     picocolors "^1.0.0"
 
-vite-plugin-tailwind-grouping@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/vite-plugin-tailwind-grouping/-/vite-plugin-tailwind-grouping-0.1.7.tgz#1eb1f293b3849a05e342f526d30808f802041b4a"
-  integrity sha512-KiuCuhqOFUMFONRyn58K822qQAfs+Zx5i/0zlS+Vy39PfFGwuRtAVmdndnhS+ad3N1DLd7bcR/tYIIXipvD8BQ==
+vite-plugin-tailwind-grouping@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/vite-plugin-tailwind-grouping/-/vite-plugin-tailwind-grouping-0.1.8.tgz#8300370e81d25cc662f452b55d8d5b800e3728d0"
+  integrity sha512-8zYZPA4CQ1CNC+VfrHREca3DdXn+csbx0cqFoP1S2PJVEvat3lDTVKM3Wga6dBoGei+fO13OobOFchy9nFD38g==
   dependencies:
     "@babel/core" "^7.16.5"
     "@babel/plugin-syntax-jsx" "^7.16.5"
