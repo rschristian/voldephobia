@@ -105,6 +105,10 @@ export async function getModule(name, version) {
             throw new Error(e);
         }
 
+        // NPM, for some reason, returns a string rather than an
+        // object w/ an `error` property here. Yay for consistent APIs!
+        if (typeof pkg === 'string') throw new Error(pkg);
+
         cacheEntry.module = {
             key: createModuleKey(name, version),
             pkg,
