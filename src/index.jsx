@@ -87,6 +87,14 @@ function DataBox({ serverRes }) {
     let mouseDown = false;
     let startX, scrollLeft;
 
+    useEffect(() => {
+        if (container.current && !serverRes.error) {
+            if (container.current.scrollWidth > container.current.clientWidth) {
+                container.current.classList.add('cursor-grab');
+            }
+        }
+    }, [container]);
+
     const startDragging = (e) => {
         e.preventDefault();
         mouseDown = true;
@@ -113,7 +121,7 @@ function DataBox({ serverRes }) {
                 ref={container}
                 class={`mt-8 p-4 overflow-x-auto border(& ${
                     serverRes.error ? 'red' : 'primary-dim'
-                } 1) rounded ${serverRes.error ? '' : 'cursor-grab'}`}
+                } 1) rounded`}
                 onMouseMove={move}
                 onMouseDown={startDragging}
                 onMouseUp={stopDragging}
