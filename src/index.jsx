@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { Root, Main, Header, Footer } from '@rschristian/intrepid-design';
 import { withTwind } from '@rschristian/twind-wmr';
 
-const API_URL = import.meta.env.NODE_ENV !== 'production' ? 'http://localhost:5000' : '';
+import { getPackageData } from './pkg/pkgQuery.js';
 
 export function App() {
     const [pkgQuery, setPkgQuery] = useState('');
@@ -18,21 +18,18 @@ export function App() {
         }
     }, []);
 
-    const fetchPkgTree = useCallback(async (name) => {
+    const fetchPkgTree = useCallback(async (pkgQuery) => {
         setServerRes(null);
         setInProgress(true);
         try {
-            const res = await (
-                await fetch(`${API_URL}/pkg/${encodeURIComponent(name)}`, {
-                    method: 'GET',
-                })
-            ).json();
+            const res = await getPackageData(pkgQuery);
 
             setServerRes(res);
             setInProgress(false);
-            window.history.pushState({}, '', `?q=${name}`);
+            window.history.pushState({}, '', `?q=${pkgQuery}`);
         } catch (e) {
-            console.log(e);
+            setServerRes({ error: e.message });
+            setInProgress(false);
         }
     }, []);
 

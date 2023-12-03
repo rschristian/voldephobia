@@ -2,10 +2,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "serve:dev": "yarn dev:worker -- -- sovereign",
-    "dev:worker": "wrangler pages dev --port 5000 --proxy 3000",
+    "serve:dev": "sovereign",
+    "serve:prod": "sovereign serve",
     "build": "sovereign build",
-    "serve:prod": "yarn dev:worker -- -- sovereign serve",
     "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
@@ -22,10 +21,8 @@
   },
   "devDependencies": {
     "@types/semver": "^7.5.4",
-    "miniflare": "^3.0.0",
     "prettier": "^3.0.3",
-    "prettier-config-rschristian": "^0.1.1",
-    "wrangler": "^3.16.0"
+    "prettier-config-rschristian": "^0.1.1"
   },
   "packageManager": "yarn@1.22.19",
   "prettier": "prettier-config-rschristian"
