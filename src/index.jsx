@@ -144,7 +144,7 @@ function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
                 {lineSymbol}
                 <a
                     class={`px-1 py-0.5 rounded bg-highlight(& dark:dark) hocus:opacity-80 ${
-                        pkg.poisoned && 'underline decoration-red'
+                        pkg.poisoned ? 'underline decoration-red' : ''
                     }`}
                     href={`https://npm.im/${pkg.name}`}
                     target="_blank"
