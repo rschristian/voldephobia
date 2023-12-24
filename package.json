@@ -24,6 +24,5 @@
     "prettier": "^3.0.3",
     "prettier-config-rschristian": "^0.1.1"
   },
-  "packageManager": "yarn@1.22.19",
   "prettier": "prettier-config-rschristian"
 }
