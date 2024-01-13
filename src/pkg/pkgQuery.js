@@ -92,23 +92,29 @@ async function walkModuleGraph(query) {
  */
 function formTreeFromGraph(entryModule, graph) {
     let moduleTree = {};
+    const parentNodes = new Set();
 
     /**
      * @param {ModuleInfo} module
      * @param {{ dependencies: unknown[] }} [parent]
      */
     const _walk = (module, parent) => {
+        const shouldWalk = !parentNodes.has(module.module.pkg.name);
+
         const m = {
             name: module.module.pkg.name,
             version: module.module.pkg.version,
             poisoned: module.poisoned,
-            ...(module.dependencies.length && { dependencies: [] }),
+            ...(!shouldWalk && { recursive: true }),
+            ...(shouldWalk && module.dependencies.length && { dependencies: [] }),
         };
 
-        if (module.dependencies.length) {
+        if (shouldWalk) {
+            parentNodes.add(m.name);
             for (const dep of module.dependencies) {
                 _walk(graph.get(dep.key), m);
             }
+            parentNodes.delete(m.name);
         }
 
         parent ? parent.dependencies.push(m) : (moduleTree = m);
