@@ -129,11 +129,13 @@ function DataBox({ serverRes }) {
             {!serverRes.error && (
                 <>
                     <p class="mt-4">
-                        Any packages underlined in red above have You-Know-Who as a maintainer
+                        Any packages <span class="underline decoration-red">underlined in red</span>{' '}
+                        above have You-Know-Who as a maintainer
                     </p>
                     <p class="mt-2">
-                        Any packages with an amber background above are recurisve and therefore
-                        their dependencies are skipped from tree display
+                        Any packages with an{' '}
+                        <span class="px-0.5 rounded bg-[#451a03]">amber background</span> above are
+                        recurisve and therefore their dependencies are skipped from tree display
                     </p>
                 </>
             )}
