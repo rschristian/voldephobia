@@ -14,7 +14,6 @@
 
 Navigate to <a href="https://voldephobia.rschristian.dev">voldephobia.rschristian.dev</a>, input a package query (can be a bare package name or name@version), and view the resulting data tree. With this, you can see which modules are poisoned and why they're included.
 
-
 ## Acknowledgements
 
 Much of the registry/module graph code was adopted from [`npmgraph`](https://github.com/npmgraph/npmgraph), the license of which can be found [here](https://github.com/npmgraph/npmgraph/blob/main/LICENSE).

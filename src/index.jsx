@@ -98,19 +98,19 @@ function DataBox({ serverRes }) {
         startX = e.pageX - container.current.offsetLeft;
         scrollLeft = container.current.scrollLeft;
         container.current.style.cursor = 'grabbing';
-    }
+    };
 
     const stopDragging = () => {
         mouseDown = false;
         container.current.style.removeProperty('cursor');
-    }
+    };
 
     const move = (e) => {
         e.preventDefault();
         if (!mouseDown) return;
-        const scroll = (e.pageX - container.current.offsetLeft) - startX;
+        const scroll = e.pageX - container.current.offsetLeft - startX;
         container.current.scrollLeft = scrollLeft - scroll;
-    }
+    };
 
     return (
         <>

@@ -67,6 +67,7 @@ function getSemverXRange(version) {
     const [majorWithRange, minor] = version.split('.');
     const major = majorWithRange.slice(1);
 
+    // prettier-ignore
     return majorWithRange.startsWith('^')
         ? `${major}.x.x`
         : majorWithRange.startsWith('~') && minor
