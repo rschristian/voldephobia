@@ -50,9 +50,7 @@ async function walkModuleGraph(query) {
     const _walk = async (module, level = 0) => {
         if (!module) return Promise.reject(new Error('Module not found'));
 
-        if (graph.has(module.key)) {
-            return Promise.resolve();
-        }
+        if (graph.has(module.key)) return;
 
         let deps = [];
         for (const [name, version] of Object.entries(module.pkg.dependencies || {})) {
@@ -66,6 +64,7 @@ async function walkModuleGraph(query) {
             module,
             level,
             poisoned: JSON.stringify(pkgWithoutDeps).includes('ljharb'),
+            dependencies: [],
         };
         graph.set(module.key, info);
 
@@ -78,11 +77,11 @@ async function walkModuleGraph(query) {
             }),
         );
 
-        return (info.dependencies = resolvedDeps);
+        info.dependencies = resolvedDeps;
     };
 
     const module = await getModule(query);
-    if (module) await _walk(module);
+    await _walk(module);
     return [module, graph];
 }
 

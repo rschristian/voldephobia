@@ -8,7 +8,7 @@ export interface ModuleInfo {
     module: Module;
     level: number;
     poisoned: boolean;
-    dependencies?: Module[];
+    dependencies: Module[];
 }
 
 type Graph = Map<string, ModuleInfo>;
