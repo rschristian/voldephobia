@@ -127,17 +127,10 @@ function DataBox({ serverRes }) {
                 {serverRes.error ? serverRes.error : <PackageTree pkg={serverRes} />}
             </section>
             {!serverRes.error && (
-                <>
-                    <p class="mt-4">
-                        Any packages <span class="underline decoration-red">underlined in red</span>{' '}
-                        above have You-Know-Who as a maintainer
-                    </p>
-                    <p class="mt-2">
-                        Any packages with an{' '}
-                        <span class="px-0.5 rounded bg-[#451a03]">amber background</span> above are
-                        recurisve and therefore their dependencies are skipped from tree display
-                    </p>
-                </>
+                <p class="mt-4">
+                    Any packages <span class="underline decoration-red">underlined in red</span>{' '}
+                    above have You-Know-Who as a maintainer
+                </p>
             )}
         </>
     );
@@ -158,7 +151,7 @@ function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
                 <a
                     class={`px-1 py-0.5 rounded bg-highlight(& dark:dark) hocus:opacity-80 ${
                         pkg.poisoned ? 'underline decoration-red' : ''
-                    } ${pkg.recursive ? '!bg-[#451a03]' : ''}`}
+                    }`}
                     href={`https://npm.im/${pkg.name}`}
                     target="_blank"
                     rel="noopener noreferrer"

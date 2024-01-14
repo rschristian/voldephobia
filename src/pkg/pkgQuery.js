@@ -104,7 +104,6 @@ function formTreeFromGraph(entryModule, graph) {
             name: module.module.pkg.name,
             version: module.module.pkg.version,
             poisoned: module.poisoned,
-            ...(!shouldWalk && { recursive: true }),
             ...(shouldWalk && module.dependencies.length && { dependencies: [] }),
         };
 
