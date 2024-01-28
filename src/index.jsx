@@ -6,7 +6,7 @@ import { getPackageData } from './pkg/pkgQuery.js';
 
 export function App() {
     const [pkgQuery, setPkgQuery] = useState('');
-    const [serverRes, setServerRes] = useState(null);
+    const [queryResult, setQueryResult] = useState(null);
     const [inProgress, setInProgress] = useState(false);
 
     // Fetch package data if `?q=package-name` has been provided
@@ -19,16 +19,16 @@ export function App() {
     }, []);
 
     const fetchPkgTree = useCallback(async (pkgQuery) => {
-        setServerRes(null);
+        setQueryResult(null);
         setInProgress(true);
         try {
-            const res = await getPackageData(pkgQuery);
+            const result = await getPackageData(pkgQuery);
 
-            setServerRes(res);
+            setQueryResult(result);
             setInProgress(false);
             window.history.pushState({}, '', `?q=${pkgQuery}`);
         } catch (e) {
-            setServerRes({ error: e.message });
+            setQueryResult({ error: e.message });
             setInProgress(false);
         }
     }, []);
@@ -71,7 +71,7 @@ export function App() {
                         This is mostly a joke, but the resistance to modernizing is disconcerting
                     </p>
                     {inProgress && <span class="loader mt-8 p-4"></span>}
-                    {serverRes && <DataBox serverRes={serverRes} />}
+                    {queryResult && <DataBox queryResult={queryResult} />}
                 </div>
             </Main>
             <Footer year={2023} />
@@ -79,13 +79,13 @@ export function App() {
     );
 }
 
-function DataBox({ serverRes }) {
+function DataBox({ queryResult }) {
     const container = useRef(null);
     let mouseDown = false;
     let startX, scrollLeft;
 
     useEffect(() => {
-        if (container.current && !serverRes.error) {
+        if (container.current && !queryResult.error) {
             if (container.current.scrollWidth > container.current.clientWidth) {
                 container.current.classList.add('cursor-grab');
             }
@@ -124,9 +124,12 @@ function DataBox({ serverRes }) {
                 onMouseUp={stopDragging}
                 onMouseLeave={stopDragging}
             >
-                {serverRes.error ? serverRes.error : <PackageTree pkg={serverRes} />}
+                {queryResult.error
+                    ? queryResult.error
+                    : <PackageTree pkg={queryResult} />
+                }
             </section>
-            {!serverRes.error && (
+            {!queryResult.error && (
                 <p class="mt-4">
                     Any packages <span class="underline decoration-red">underlined in red</span>{' '}
                     above have You-Know-Who as a maintainer
