@@ -115,30 +115,32 @@ function DataBox({ queryResult }) {
     };
 
     return (
-        <div class={`relative mt-8 p-4 border(& ${queryResult.error ? 'red' : 'primary-dim'} 1) rounded`}>
-            <Hint template={() => (
-                <div class="text-left">
-                    Module Count: {queryResult.stats.moduleCount}<br />
-                    Poisoned Module Count: {queryResult.stats.poisonedModuleCount}<br />
-                    Total Number of Nodes: {queryResult.stats.nodeCount}
+        <>
+            <section class={`relative mt-8 p-4 border(& ${queryResult.error ? 'red' : 'primary-dim'} 1) rounded`}>
+                <Hint template={() => (
+                    <div class="text-left">
+                        Module Count: {queryResult.stats.moduleCount}<br />
+                        Poisoned Module Count: {queryResult.stats.poisonedModuleCount}<br />
+                        Total Number of Nodes: {queryResult.stats.nodeCount}
+                    </div>
+                )}>
+                    <svg data-hint=" " class="absolute right-0">
+                        <use href="/assets/icons.svg#info" />
+                    </svg>
+                </Hint>
+                <div
+                    ref={container}
+                    class="overflow-x-auto"
+                    onMouseMove={move}
+                    onMouseDown={startDragging}
+                    onMouseUp={stopDragging}
+                    onMouseLeave={stopDragging}
+                >
+                    {queryResult.error
+                        ? queryResult.error
+                        : <PackageTree pkg={queryResult.moduleTree} />
+                    }
                 </div>
-            )}>
-                <svg data-hint=" " class="absolute right-0">
-                    <use href="/assets/icons.svg#info" />
-                </svg>
-            </Hint>
-            <section
-                ref={container}
-                class="overflow-x-auto"
-                onMouseMove={move}
-                onMouseDown={startDragging}
-                onMouseUp={stopDragging}
-                onMouseLeave={stopDragging}
-            >
-                {queryResult.error
-                    ? queryResult.error
-                    : <PackageTree pkg={queryResult.moduleTree} />
-                }
             </section>
             {!queryResult.error && (
                 <p class="mt-4">
@@ -146,7 +148,7 @@ function DataBox({ queryResult }) {
                     above have You-Know-Who as a maintainer
                 </p>
             )}
-        </div>
+        </>
     );
 }
 
