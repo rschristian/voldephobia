@@ -15,6 +15,7 @@
     "@twind/preset-tailwind": "^1.1.4",
     "preact": "^10.19.1",
     "preact-iso": "^2.3.1",
+    "preact-hint": "^0.2.0",
     "preact-render-to-string": "^6.3.0",
     "semver": "^7.5.4"
   },

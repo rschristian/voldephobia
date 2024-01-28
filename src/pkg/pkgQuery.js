@@ -12,21 +12,29 @@ function errorResponse(message) {
 export async function getPackageData(pkgQuery) {
     pkgQuery = pkgQuery.toLowerCase();
 
-    if (!pkgQuery) return errorResponse('Missing package query');
+    if (!pkgQuery) errorResponse('Missing package query');
     if (!/^(?:@.+\/[a-z]|[a-z])/.test(pkgQuery))
-        return errorResponse(
+        errorResponse(
             'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
         );
 
     let moduleTree = {};
+    const stats = {
+        moduleCount: 0,
+        poisonedModuleCount: 0,
+        nodeCount: 0,
+    }
     try {
         const [entryModule, graph] = await walkModuleGraph(pkgQuery);
-        moduleTree = formTreeFromGraph(graph.get(entryModule.key), graph);
+        ([moduleTree, stats.nodeCount] = formTreeFromGraph(graph.get(entryModule.key), graph));
+
+        stats.moduleCount = graph.size;
+        graph.forEach((m) => (m.poisoned && stats.poisonedModuleCount++));
     } catch (e) {
-        return errorResponse(e.message);
+        errorResponse(e.message);
     }
 
-    return moduleTree;
+    return { moduleTree, stats };
 }
 
 /**
@@ -88,10 +96,12 @@ async function walkModuleGraph(query) {
 /**
  * @param {ModuleInfo} entryModule
  * @param {Graph} graph
+ * @returns {[Object, number]}
  */
 function formTreeFromGraph(entryModule, graph) {
     let moduleTree = {};
     const parentNodes = new Set();
+    let nodeCount = 0;
 
     /**
      * @param {ModuleInfo} module
@@ -116,8 +126,9 @@ function formTreeFromGraph(entryModule, graph) {
         }
 
         parent ? parent.dependencies.push(m) : (moduleTree = m);
+        nodeCount++;
     };
 
     if (entryModule) _walk(entryModule);
-    return moduleTree;
+    return [moduleTree, nodeCount];
 }

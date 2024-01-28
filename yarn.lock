@@ -883,6 +883,11 @@ postcss@^8.4.27:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+preact-hint@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/preact-hint/-/preact-hint-0.2.0.tgz#63eefc0f980ebf4f43555e6b6f50970b964e00be"
+  integrity sha512-OCrwBOEQYIKvIDaZRnsLw5hCiZzMCwSlhnKTQD3EwD9GDMksSjkLRd9mU0k9tIgAQLD7pWb1BFtvGu6fycYVJw==
+
 preact-iso@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/preact-iso/-/preact-iso-2.3.1.tgz#31ee75082c6acceb395171996b2c59f45df49ab4"
