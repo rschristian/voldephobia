@@ -1,5 +1,7 @@
 import { getModule } from './registry.js';
 
+const HE_WHO_MUST_NOT_BE_NAMED = String.fromCharCode(108, 106, 104, 97, 114, 98);
+
 /**
  * @param {string} message
  */
@@ -71,7 +73,7 @@ async function walkModuleGraph(query) {
         const info = {
             module,
             level,
-            poisoned: JSON.stringify(pkgWithoutDeps).includes('ljharb'),
+            poisoned: JSON.stringify(pkgWithoutDeps).includes(HE_WHO_MUST_NOT_BE_NAMED),
             dependencies: [],
         };
         graph.set(module.key, info);
