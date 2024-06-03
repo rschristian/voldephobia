@@ -9,19 +9,19 @@
   },
   "dependencies": {
     "@rschristian/intrepid-design": "^0.1.4",
-    "@rschristian/twind-wmr": "^0.3.0",
-    "@sovereignjs/core": "^0.1.1",
+    "@rschristian/twind-preact-iso": "^0.4.0",
+    "@sovereignjs/core": "^0.1.2",
     "@twind/core": "^1.1.3",
     "@twind/preset-tailwind": "^1.1.4",
-    "preact": "^10.19.1",
-    "preact-iso": "^2.3.1",
+    "preact": "^10.22.0",
+    "preact-iso": "^2.6.3",
     "preact-hint": "^0.2.0",
-    "preact-render-to-string": "^6.3.0",
+    "preact-render-to-string": "^6.5.4",
     "semver": "^7.5.4"
   },
   "devDependencies": {
     "@types/semver": "^7.5.4",
-    "prettier": "^3.0.3",
+    "prettier": "^2.8.8",
     "prettier-config-rschristian": "^0.1.1"
   },
   "prettier": "prettier-config-rschristian"
