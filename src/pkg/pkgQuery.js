@@ -67,13 +67,11 @@ async function walkModuleGraph(query) {
             deps.push({ name, version });
         }
 
-        const { dependencies, devDependencies, peerDependencies, ...pkgWithoutDeps } = module.pkg;
-
         /** @type {ModuleInfo} */
         const info = {
             module,
             level,
-            poisoned: JSON.stringify(pkgWithoutDeps).includes(HE_WHO_MUST_NOT_BE_NAMED),
+            poisoned: module.maintainers.some((m) => m.name === HE_WHO_MUST_NOT_BE_NAMED),
             dependencies: [],
         };
         graph.set(module.key, info);

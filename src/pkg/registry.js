@@ -6,6 +6,7 @@ const moduleCache = new Map();
 /**
  * @typedef {import('./types.d.ts').Module} Module
  * @typedef {import('./types.d.ts').PackageData} PackageData
+ * @typedef {import('./types.d.ts').Maintainers} Maintainers
  * @typedef {import('./types.d.ts').ModuleCacheEntry} ModuleCacheEntry
  * @typedef {import('./types.d.ts').PackageMetaData} PackageMetaData
  */
@@ -96,6 +97,8 @@ export async function getModule(name, version) {
     cacheEntry.resolve = (async () => {
         /** @type {PackageData} */
         let pkg;
+        /** @type {Maintainers[]} */
+        let maintainers
         try {
             /** @type {PackageMetaData} */
             const pkgMeta = await (await fetch(`${NPM_REGISTRY}/${name}`)).json();
@@ -104,6 +107,7 @@ export async function getModule(name, version) {
 
             version = getSatisfyingSemverVersion(pkgMeta, version);
             pkg = pkgMeta.versions[version];
+            maintainers = pkgMeta.maintainers;
         } catch (e) {
             throw new Error(e);
         }
@@ -111,6 +115,7 @@ export async function getModule(name, version) {
         cacheEntry.module = {
             key: createModuleKey(name, version),
             pkg,
+            maintainers,
         };
 
         return cacheEntry.module;
