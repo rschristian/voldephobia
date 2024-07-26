@@ -158,8 +158,8 @@ function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
     let lineSymbol = prefix;
     let childPrefix = prefix;
     if (depth > 0) {
-        lineSymbol += (isLast ? '└' : '├').padEnd(8, '-');
-        childPrefix += (isLast ? ' ' : '│').padEnd(10, ' ');
+        lineSymbol += (isLast ? '└' : '├').padEnd(6, '-');
+        childPrefix += (isLast ? ' ' : '│').padEnd(8, ' ');
     }
 
     return (
