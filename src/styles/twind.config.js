@@ -4,7 +4,7 @@ import presetTailwind from '@twind/preset-tailwind';
 export const twindConfig = defineConfig({
     darkMode: 'class',
     presets: [presetTailwind()],
-    ignorelist: ['dark', 'loader'],
+    ignorelist: ['dark', 'loader', 'preact-hint', 'preact-hint__fade-in', 'preact-hint__content'],
     hash: false,
     theme: {
         colors: {
