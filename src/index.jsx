@@ -26,13 +26,32 @@ export function App() {
             const result = await getPackageData(pkgQuery);
 
             setQueryResult(result);
-            setInProgress(false);
             window.history.pushState({}, '', `?q=${pkgQuery}`);
         } catch (e) {
             setQueryResult({ error: e.message });
-            setInProgress(false);
         }
+        setInProgress(false);
     }, []);
+
+    const onFileSubmit = async (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = () => {
+            const { dependencies, devDependencies, peerDependencies } = JSON.parse(/** @type {string} */ (reader.result));
+            if (!dependencies && !devDependencies && !peerDependencies) {
+                setQueryResult({ error: 'No dependencies found in uploaded file' });
+            } else {
+                const deps = Array.from(Object.entries({ ...dependencies, ...devDependencies, ...peerDependencies })
+                    .map(([key, value]) => `${key}@${value}`))
+                    .join(',');
+                setPkgQuery(deps);
+                fetchPkgTree(deps);
+            }
+        };
+        reader.onerror = () => setQueryResult({ error: `Error when attempting to read file: ${file.name}` })
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -50,23 +69,38 @@ export function App() {
                 <Header.ThemeToggle />
             </Header>
             <Main widthStyle="flex justify-center w-full lg:max-w-screen-lg">
-                <div class="h-fit w-full 2xl:mt-[5vh] p(4 md:8) text-center bg-card(& dark:dark) rounded-xl">
+                <div class="h-fit w-10/12 2xl:mt-[5vh] p(4 md:8) text-center bg-card(& dark:dark) rounded-xl">
                     <h1 class="text-4xl font-bold">Voldephobia</h1>
                     <p class="p-2">
                         Find out if your dependency tree is plagued with packages from You-Know-Who
                     </p>
                     <form onSubmit={onSubmit}>
-                        <input
-                            autocorrect="off"
-                            autocapitalize="none"
-                            enterkeyhint="search"
-                            class="my-8 py-2 px-4 w-full text(3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
-                            placeholder="Provide a package name"
-                            value={pkgQuery}
-                            onInput={(e) =>
-                                setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
-                            }
-                        />
+                        <div class="flex my-8 items-center">
+                            <input
+                                autocorrect="off"
+                                autocapitalize="none"
+                                enterkeyhint="search"
+                                class="py-2 px-4 w-full text(3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
+                                placeholder="Provide a package name"
+                                value={pkgQuery}
+                                onInput={(e) =>
+                                    setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
+                                }
+                            />
+                            <span class="mx-4">Or...</span>
+                            <input
+                                id="file-upload"
+                                onChange={onFileSubmit}
+                                type="file"
+                                accept="application/json"
+                            />
+                            <label
+                                for="file-upload"
+                                class="py-2 px-4 bg-highlight(& dark:dark) drop-shadow-lg rounded-lg"
+                            >
+                                Upload package.json
+                            </label>
+                        </div>
                     </form>
                     <p class="text-xs">
                         This is mostly a joke, but the resistance to modernizing is disconcerting
@@ -131,7 +165,7 @@ function DataBox({ queryResult }) {
                 )}
                 <div
                     ref={container}
-                    class="overflow-x-auto"
+                    class="overflow-x-auto p-0.5"
                     onMouseMove={move}
                     onMouseDown={startDragging}
                     onMouseUp={stopDragging}
@@ -139,7 +173,7 @@ function DataBox({ queryResult }) {
                 >
                     {queryResult.error
                         ? queryResult.error
-                        : <PackageTree pkg={queryResult.moduleTree} />
+                        : queryResult.moduleTrees.map(pkg => <PackageTree pkg={pkg} />)
                     }
                 </div>
             </section>
@@ -162,7 +196,7 @@ function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
     }
 
     return (
-        <div class={depth == 1 && 'ml-4'}>
+        <div class={depth == 0 && 'mb-4 last:mb-2' || depth == 1 && 'ml-4'}>
             <pre class="w-max">
                 {lineSymbol}
                 <a

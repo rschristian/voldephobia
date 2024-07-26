@@ -56,3 +56,22 @@ svg {
   color: #eee;
   background: #282828;
 }
+
+/* custom file input button shenanigans */
+#file-upload {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+#file-upload + label {
+	cursor: pointer;
+}
+
+#file-upload:focus + label,
+#file-upload + label:hover {
+  outline: 2px solid #44bb44;
+}

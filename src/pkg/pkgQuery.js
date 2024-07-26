@@ -12,31 +12,41 @@ function errorResponse(message) {
 }
 
 export async function getPackageData(pkgQuery) {
-    pkgQuery = pkgQuery.toLowerCase();
+    const pkgQueries = pkgQuery.toLowerCase().split(',');
 
-    if (!pkgQuery) errorResponse('Missing package query');
-    if (!/^(?:@.+\/[a-z]|[a-z])/.test(pkgQuery))
-        errorResponse(
-            'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
-        );
-
-    let moduleTree = {};
+    const moduleTrees = [];
+    let uniqueModules = new Set();
+    let poisonedModules = new Set();
     const stats = {
         moduleCount: 0,
         poisonedModuleCount: 0,
         nodeCount: 0,
     }
-    try {
-        const [entryModule, graph] = await walkModuleGraph(pkgQuery);
-        ([moduleTree, stats.nodeCount] = formTreeFromGraph(graph.get(entryModule.key), graph));
 
-        stats.moduleCount = graph.size;
-        graph.forEach((m) => (m.poisoned && stats.poisonedModuleCount++));
-    } catch (e) {
-        errorResponse(e.message);
+    for (const query of pkgQueries) {
+        if (!query) errorResponse('Missing package query');
+        if (!/^(?:@.+\/[a-z]|[a-z])/.test(query))
+            errorResponse(
+                'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
+            );
+
+        try {
+            const [entryModule, graph] = await walkModuleGraph(query);
+            const [moduleTree, uModules, pModules, nodeCount] = formTreeFromGraph(graph.get(entryModule.key), graph);
+
+            moduleTrees.push(moduleTree);
+            stats.nodeCount += nodeCount;
+
+            uniqueModules = new Set([...uniqueModules, ...uModules]);
+            poisonedModules = new Set([...poisonedModules, ...pModules]);
+        } catch (e) {
+            errorResponse(e.message);
+        }
     }
 
-    return { moduleTree, stats };
+    stats.moduleCount = uniqueModules.size;
+    stats.poisonedModuleCount = poisonedModules.size;
+    return { moduleTrees, stats };
 }
 
 /**
@@ -96,11 +106,14 @@ async function walkModuleGraph(query) {
 /**
  * @param {ModuleInfo} entryModule
  * @param {Graph} graph
- * @returns {[Object, number]}
+ * @returns {[Object, Set<string>, Set<string>, number]}
  */
 function formTreeFromGraph(entryModule, graph) {
     let moduleTree = {};
     const parentNodes = new Set();
+
+    const uniqueModules = new Set();
+    const poisonedModules = new Set();
     let nodeCount = 0;
 
     /**
@@ -116,6 +129,8 @@ function formTreeFromGraph(entryModule, graph) {
             poisoned: module.poisoned,
             ...(shouldWalk && module.dependencies.length && { dependencies: [] }),
         };
+        uniqueModules.add(m.name);
+        if (m.poisoned) poisonedModules.add(m.name);
 
         if (shouldWalk) {
             parentNodes.add(m.name);
@@ -130,5 +145,5 @@ function formTreeFromGraph(entryModule, graph) {
     };
 
     if (entryModule) _walk(entryModule);
-    return [moduleTree, nodeCount];
+    return [moduleTree, uniqueModules, poisonedModules, nodeCount];
 }
