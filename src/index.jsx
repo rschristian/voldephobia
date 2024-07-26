@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { Root, Main, Header, Footer } from '@rschristian/intrepid-design';
 import { withTwind } from '@rschristian/twind-preact-iso';
 import Hint from 'preact-hint';
-import 'preact-hint/style.css';
 
 import { getPackageData } from './pkg/pkgQuery.js';
 

@@ -1,3 +1,5 @@
+@import 'preact-hint/style.css';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   accent-color: #44bb44;
@@ -23,12 +25,17 @@ svg {
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #fff;
+  border: 5px solid #282828;
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+}
+
+.dark .loader {
+  border: 5px solid #fff;
+  border-bottom-color: transparent;
 }
 
 @keyframes rotation {
@@ -38,4 +45,14 @@ svg {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.preact-hint__content {
+  color: #333;
+  background: #eee;
+}
+
+.dark .preact-hint__content {
+  color: #eee;
+  background: #282828;
 }
