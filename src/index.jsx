@@ -75,7 +75,7 @@ export function App() {
                         Find out if your dependency tree is plagued with packages from You-Know-Who
                     </p>
                     <form onSubmit={onSubmit}>
-                        <div class="flex my-8 items-center">
+                        <div class="flex(& col md:row) my-8 items-center">
                             <input
                                 autocorrect="off"
                                 autocapitalize="none"
@@ -87,7 +87,7 @@ export function App() {
                                     setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
                                 }
                             />
-                            <span class="mx-4">Or...</span>
+                            <span class="mx-4 my(4 md:0)">Or...</span>
                             <input
                                 id="file-upload"
                                 onChange={onFileSubmit}
