@@ -9,6 +9,14 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --hint-text: #333;
+  --hint-background: #eee;
+
+  @media (prefers-color-scheme: dark) {
+    --hint-text: #eee;
+    --hint-background: #282828;
+  }
 }
 
 body {
@@ -45,16 +53,6 @@ svg {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.preact-hint__content {
-  color: #333;
-  background: #eee;
-}
-
-.dark .preact-hint__content {
-  color: #eee;
-  background: #282828;
 }
 
 /* custom file input button shenanigans */
