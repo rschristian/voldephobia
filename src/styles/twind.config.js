@@ -42,6 +42,7 @@ export const twindConfig = defineConfig({
         fontSize: {
             xs: '.75rem',
             base: '1rem',
+            xl: '1.25rem',
             '3xl': '1.875rem',
             '4xl': '2.5rem',
         },
