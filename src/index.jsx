@@ -4,19 +4,16 @@ import { withTwind } from '@rschristian/twind-preact-iso';
 import Hint from 'preact-hint';
 
 import { getPackageData } from './pkg/pkgQuery.js';
+import {PackageForm} from './components/Form.jsx';
 
 export function App() {
-    const [pkgQuery, setPkgQuery] = useState('');
     const [queryResult, setQueryResult] = useState(null);
     const [inProgress, setInProgress] = useState(false);
 
     // Fetch package data if `?q=package-name` has been provided
     useEffect(() => {
         const queryParamPkg = new URLSearchParams(window.location.search).get('q');
-        if (queryParamPkg) {
-            fetchPkgTree(queryParamPkg);
-            setPkgQuery(queryParamPkg);
-        }
+        if (queryParamPkg) fetchPkgTree(queryParamPkg);
     }, []);
 
     const fetchPkgTree = useCallback(async (pkgQuery) => {
@@ -32,31 +29,6 @@ export function App() {
         }
         setInProgress(false);
     }, []);
-
-    const onFileSubmit = async (e) => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsText(file, 'UTF-8');
-        reader.onload = () => {
-            const { dependencies, devDependencies, peerDependencies } = JSON.parse(/** @type {string} */ (reader.result));
-            if (!dependencies && !devDependencies && !peerDependencies) {
-                setQueryResult({ error: 'No dependencies found in uploaded file' });
-            } else {
-                const deps = Array.from(Object.entries({ ...dependencies, ...devDependencies, ...peerDependencies })
-                    .map(([key, value]) => `${key}@${value}`))
-                    .join(',');
-                setPkgQuery(deps);
-                fetchPkgTree(deps);
-            }
-        };
-        reader.onerror = () => setQueryResult({ error: `Error when attempting to read file: ${file.name}` })
-    };
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        if (pkgQuery) fetchPkgTree(pkgQuery);
-    };
 
     return (
         <Root>
@@ -74,34 +46,7 @@ export function App() {
                     <p class="p-2">
                         Find out if your dependency tree is plagued with packages from You-Know-Who
                     </p>
-                    <form onSubmit={onSubmit}>
-                        <div class="flex(& col md:row) my-8 items-center">
-                            <input
-                                autocorrect="off"
-                                autocapitalize="none"
-                                enterkeyhint="search"
-                                class="py-2 px-4 w-full text(xl md:3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
-                                placeholder="Provide a package name"
-                                value={pkgQuery}
-                                onInput={(e) =>
-                                    setPkgQuery(/** @type {HTMLInputElement} */ (e.target).value)
-                                }
-                            />
-                            <span class="mx-4 my(4 md:0)">Or...</span>
-                            <input
-                                id="file-upload"
-                                onChange={onFileSubmit}
-                                type="file"
-                                accept="application/json"
-                            />
-                            <label
-                                for="file-upload"
-                                class="py-2 px-4 bg-highlight(& dark:dark) drop-shadow-lg rounded-lg"
-                            >
-                                Upload package.json
-                            </label>
-                        </div>
-                    </form>
+                    <PackageForm setQueryResult={setQueryResult} fetchPkgTree={fetchPkgTree} />
                     <p class="text-xs">
                         This is mostly a joke, but the resistance to modernizing is disconcerting
                     </p>
