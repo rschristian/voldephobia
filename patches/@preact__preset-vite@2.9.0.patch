@@ -1,0 +1,13 @@
+diff --git a/dist/esm/index.mjs b/dist/esm/index.mjs
+index ba66accaf66ea266c957037d08da50603f9ea841..9cd9d82f3db962cc0cdf39be8ef2d22c557ed686 100644
+--- a/dist/esm/index.mjs
++++ b/dist/esm/index.mjs
+@@ -50,7 +50,7 @@ function preactPlugin({ devtoolsInProd, devToolsEnabled, prefreshEnabled, reactA
+                     jsxImportSource: jsxImportSource !== null && jsxImportSource !== void 0 ? jsxImportSource : "preact",
+                 },
+                 optimizeDeps: {
+-                    include: ["preact/jsx-runtime", "preact/jsx-dev-runtime"],
++                    include: ["preact", "preact/jsx-runtime", "preact/jsx-dev-runtime"],
+                 },
+             };
+         },
