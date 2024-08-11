@@ -13,14 +13,16 @@ export function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
         childPrefix += (isLast ? ' ' : '│').padEnd(8, ' ');
     }
 
+    const decoration = pkg.poisoned
+        ? 'underline(& offset-4) decoration(2 red)'
+        : '';
+
     return (
         <div class={depth == 0 && 'mb-4 last:mb-2' || depth == 1 && 'ml-4'}>
             <pre class="w-max">
                 {lineSymbol}
                 <a
-                    class={`px-1 py-0.5 rounded bg-highlight(& dark:dark) hocus:opacity-80 ${
-                        pkg.poisoned ? 'underline decoration-red' : ''
-                    }`}
+                    class={`px-1 py-0.5 rounded bg-highlight(& dark:dark) hocus:opacity-80 ${decoration}`}
                     href={`https://npm.im/${pkg.name}`}
                     target="_blank"
                     rel="noopener noreferrer"

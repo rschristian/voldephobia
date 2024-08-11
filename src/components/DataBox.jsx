@@ -69,7 +69,7 @@ export function DataBox({ queryResult }) {
             </section>
             {!queryResult.error && (
                 <p class="mt-4">
-                    Any packages <span class="underline decoration-red">underlined in red</span>{' '}
+                    Any packages <span class="underline(& offset-4) decoration(2 red)">underlined in red</span>{' '}
                     above have You-Know-Who as a maintainer
                 </p>
             )}
