@@ -108,17 +108,18 @@ function DataBox({ queryResult }) {
                         </svg>
                     </Hint>
                 )}
-                <div
-                    ref={container}
-                    class="overflow-x-auto p-0.5"
-                    onMouseMove={move}
-                    onMouseDown={startDragging}
-                    onMouseUp={stopDragging}
-                    onMouseLeave={stopDragging}
-                >
+                <div class="overflow-x-auto p-0.5">
                     {queryResult.error
-                        ? queryResult.error
-                        : queryResult.moduleTrees.map(pkg => <PackageTree pkg={pkg} />)
+                        ? <p class="whitespace-pre">{queryResult.error}</p>
+                        : <div
+                            ref={container}
+                            onMouseMove={move}
+                            onMouseDown={startDragging}
+                            onMouseUp={stopDragging}
+                            onMouseLeave={stopDragging}
+                        >
+                            {queryResult.moduleTrees.map(pkg => <PackageTree pkg={pkg} />)}
+                        </div>
                     }
                 </div>
             </section>
