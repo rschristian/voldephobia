@@ -82,9 +82,11 @@ function getSemverXRange(version) {
  * @param {string} [version]
  * @returns {Promise<Module>}
  */
-export async function getModule(name, version) {
+export async function getModuleData(name, version) {
     ({ name, version } = normalizeModuleInfo(name, version));
 
+    if (version && !semver.validRange(version))
+        throw new Error(`Invalid package version: '${version}' for '${name}'`);
     const cacheKey = createModuleKey(name, version && getSemverXRange(version));
 
     const cachedModule = moduleCache.get(cacheKey);

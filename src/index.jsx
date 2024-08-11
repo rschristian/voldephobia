@@ -187,6 +187,14 @@ function DataBox({ queryResult }) {
     );
 }
 
+
+/**
+ * @param {Object} props
+ * @param {import('./pkg/types.d.ts').ModuleTree} props.pkg
+ * @param {number} [props.depth=0]
+ * @param {boolean} [props.isLast=false]
+ * @param {string} [props.prefix='']
+ */
 function PackageTree({ pkg, depth = 0, isLast = false, prefix = '' }) {
     let lineSymbol = prefix;
     let childPrefix = prefix;

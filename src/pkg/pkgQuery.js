@@ -1,4 +1,4 @@
-import { getModule } from './registry.js';
+import { getModuleData } from './registry.js';
 
 const HE_WHO_MUST_NOT_BE_NAMED = String.fromCharCode(108, 106, 104, 97, 114, 98);
 
@@ -31,13 +31,12 @@ export async function getPackageData(pkgQuery) {
             );
 
         try {
-            const [entryModule, graph] = await walkModuleGraph(query);
-            const [moduleTree, uModules, pModules, nodeCount] = formTreeFromGraph(graph.get(entryModule.key), graph);
+            const { moduleTree, moduleCache, poisonedModules: pModules } = await walkModuleGraph(query);
 
             moduleTrees.push(moduleTree);
-            stats.nodeCount += nodeCount;
+            stats.nodeCount += moduleTree.nodeCount;
 
-            uniqueModules = new Set([...uniqueModules, ...uModules]);
+            uniqueModules = new Set([...uniqueModules, ...moduleCache.keys()]);
             poisonedModules = new Set([...poisonedModules, ...pModules]);
         } catch (e) {
             errorResponse(e.message);
@@ -51,99 +50,70 @@ export async function getPackageData(pkgQuery) {
 
 /**
  * @typedef {import('./types.d.ts').Module} Module
- * @typedef {import('./types.d.ts').ModuleInfo} ModuleInfo
- * @typedef {import('./types.d.ts').Graph} Graph
+ * @typedef {import('./types.d.ts').ModuleTree} ModuleTree
+ * @typedef {import('./types.d.ts').ModuleTreeCache} ModuleTreeCache
  */
 
 /**
  * @param {string} query
- * @returns {Promise<[Module, Graph]>}
+ * @returns {Promise<{
+     * moduleTree: ModuleTree,
+     * moduleCache: ModuleTreeCache,
+     * poisonedModules: Set<string>,
+ * }>}
  */
 async function walkModuleGraph(query) {
-    /** @type {Graph} */
-    const graph = new Map();
+    /** @type {ModuleTreeCache} */
+    const moduleCache = new Map();
+
+    const poisonedModules = new Set();
+
+    // Used to prevent circular deps
+    const parentNodes = new Set();
 
     /**
      * @param {Module} module
-     * @param {number} [level=0]
+     * @returns {Promise<ModuleTree>}
      */
-    const _walk = async (module, level = 0) => {
+    const _walk = async (module) => {
         if (!module) return Promise.reject(new Error('Module not found'));
-
-        if (graph.has(module.key)) return;
 
         let deps = [];
         for (const [name, version] of Object.entries(module.pkg.dependencies || {})) {
             deps.push({ name, version });
         }
 
-        /** @type {ModuleInfo} */
+        const shouldWalk = !parentNodes.has(module.pkg.name);
+
         const info = {
-            module,
-            level,
+            name: module.pkg.name,
+            version: module.pkg.version,
+            nodeCount: 1,
             poisoned: module.maintainers.some((m) => m.name === HE_WHO_MUST_NOT_BE_NAMED),
-            dependencies: [],
+            ...(shouldWalk && deps.length && { dependencies: [] }),
         };
-        graph.set(module.key, info);
-
-        const resolvedDeps = await Promise.all(
-            deps.map(async (dep) => {
-                const module = await getModule(dep.name, dep.version);
-                await _walk(module, level + 1);
-
-                return module;
-            }),
-        );
-
-        info.dependencies = resolvedDeps;
-    };
-
-    const module = await getModule(query);
-    await _walk(module);
-    return [module, graph];
-}
-
-/**
- * @param {ModuleInfo} entryModule
- * @param {Graph} graph
- * @returns {[Object, Set<string>, Set<string>, number]}
- */
-function formTreeFromGraph(entryModule, graph) {
-    let moduleTree = {};
-    const parentNodes = new Set();
-
-    const uniqueModules = new Set();
-    const poisonedModules = new Set();
-    let nodeCount = 0;
-
-    /**
-     * @param {ModuleInfo} module
-     * @param {{ dependencies: unknown[] }} [parent]
-     */
-    const _walk = (module, parent) => {
-        const shouldWalk = !parentNodes.has(module.module.pkg.name);
-
-        const m = {
-            name: module.module.pkg.name,
-            version: module.module.pkg.version,
-            poisoned: module.poisoned,
-            ...(shouldWalk && module.dependencies.length && { dependencies: [] }),
-        };
-        uniqueModules.add(m.name);
-        if (m.poisoned) poisonedModules.add(m.name);
+        if (info.poisoned) poisonedModules.add(info.name);
 
         if (shouldWalk) {
-            parentNodes.add(m.name);
-            for (const dep of module.dependencies) {
-                _walk(graph.get(dep.key), m);
+            parentNodes.add(info.name);
+            // `Promise.all(deps.map(...))` would be a bit faster but results in an
+            // unstable dependency order -- refresh the page and things will shift.
+            //
+            // For now, I find that undesirable, but it's an option for the future.
+            for (const dep of deps) {
+                const module = await getModuleData(dep.name, dep.version);
+                const moduleTree = await _walk(module);
+                info.nodeCount += moduleTree.nodeCount;
+                info.dependencies.push(moduleTree);
             }
-            parentNodes.delete(m.name);
+            parentNodes.delete(info.name);
         }
+        moduleCache.set(module.key, info);
 
-        parent ? parent.dependencies.push(m) : (moduleTree = m);
-        nodeCount++;
+        return info;
     };
 
-    if (entryModule) _walk(entryModule);
-    return [moduleTree, uniqueModules, poisonedModules, nodeCount];
+    const module = await getModuleData(query);
+    const moduleTree = await _walk(module);
+    return { moduleTree, moduleCache, poisonedModules };
 }

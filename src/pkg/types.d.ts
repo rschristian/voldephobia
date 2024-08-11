@@ -5,14 +5,15 @@ export interface Module {
     maintainers: Maintainers[];
 }
 
-export interface ModuleInfo {
-    module: Module;
-    level: number;
-    poisoned: boolean;
-    dependencies: Module[];
-}
+export type ModuleTreeCache = Map<string, ModuleTree>;
 
-type Graph = Map<string, ModuleInfo>;
+export interface ModuleTree {
+    name: string;
+    version: string;
+    nodeCount: number;
+    poisoned: boolean;
+    dependencies?: ModuleTree[];
+}
 
 // registry
 export interface PackageData {
