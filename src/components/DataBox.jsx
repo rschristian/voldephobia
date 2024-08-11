@@ -47,7 +47,7 @@ export function DataBox({ queryResult }) {
                             Total Number of Nodes: {queryResult.stats.nodeCount}
                         </div>
                     )}>
-                        <svg data-hint=" " class="absolute right-0">
+                        <svg tabindex={0} data-hint=" " class="absolute right-0">
                             <use href="/assets/icons.svg#info" />
                         </svg>
                     </Hint>
