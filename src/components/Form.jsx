@@ -1,5 +1,28 @@
 import { useRef } from 'preact/hooks';
 
+/**
+ * @param {string} readerResult
+ * @returns {string | { error: string }}
+ */
+function extractPackageData(readerResult) {
+    try {
+        const { dependencies, devDependencies, peerDependencies } = JSON.parse(readerResult);
+        if (!dependencies && !devDependencies && !peerDependencies) {
+            return { error: 'No dependencies found in uploaded file' };
+        }
+
+        return Array.from(
+            Object.entries({
+                ...dependencies,
+                ...devDependencies,
+                ...peerDependencies,
+            }).map(([key, value]) => `${key}@${value}`),
+        ).join(',');
+    } catch (e) {
+        return { error: 'Are you sure you uploaded JSON?' };
+    }
+}
+
 export function PackageForm({ setQueryResult, fetchPkgTree }) {
     const formRef = useRef(null);
 
@@ -9,22 +32,10 @@ export function PackageForm({ setQueryResult, fetchPkgTree }) {
         const reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
         reader.onload = () => {
-            const { dependencies, devDependencies, peerDependencies } = JSON.parse(
-                /** @type {string} */ (reader.result),
-            );
-            if (!dependencies && !devDependencies && !peerDependencies) {
-                setQueryResult({ error: 'No dependencies found in uploaded file' });
-            } else {
-                const deps = Array.from(
-                    Object.entries({
-                        ...dependencies,
-                        ...devDependencies,
-                        ...peerDependencies,
-                    }).map(([key, value]) => `${key}@${value}`),
-                ).join(',');
-                formRef.current[0].value = deps;
-                formRef.current.requestSubmit();
-            }
+            const deps = extractPackageData(/** @type {string} */ (reader.result));
+            if (typeof deps !== 'string') return setQueryResult({ error: deps.error });
+            formRef.current[0].value = deps;
+            formRef.current.requestSubmit();
         };
         reader.onerror = () =>
             setQueryResult({ error: `Error when attempting to read file: ${file.name}` });
