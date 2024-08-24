@@ -8,7 +8,7 @@
     "format": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@rschristian/intrepid-design": "^0.1.4",
+    "@rschristian/intrepid-design": "^0.1.5",
     "@rschristian/twind-preact-iso": "^0.4.0",
     "@sovereignjs/core": "^0.1.4",
     "@twind/core": "^1.1.3",
