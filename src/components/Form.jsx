@@ -1,4 +1,4 @@
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 
 /**
  * @param {string} readerResult
@@ -25,6 +25,13 @@ function extractPackageData(readerResult) {
 
 export function PackageForm({ setQueryResult, fetchPkgTree }) {
     const formRef = useRef(null);
+
+    useEffect(() => {
+        if (formRef.current) {
+            const defaultValue = (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('q')) || '';
+            formRef.current[0].defaultValue = defaultValue;
+        }
+    }, []);
 
     const onFileSubmit = async (e) => {
         e.preventDefault();
@@ -57,11 +64,6 @@ export function PackageForm({ setQueryResult, fetchPkgTree }) {
                     enterkeyhint="search"
                     class="py-2 px-4 w-full text(xl md:3xl center [#111]) bg-input(& dark:dark) drop-shadow-lg rounded-lg"
                     placeholder="Provide a package name"
-                    defaultValue={
-                        (typeof window !== 'undefined' &&
-                            new URLSearchParams(window.location.search).get('q')) ||
-                        ''
-                    }
                 />
                 <span class="mx-4 my(4 md:0)">Or...</span>
                 <input
