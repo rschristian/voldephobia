@@ -24,10 +24,5 @@
     "prettier": "^2.8.8",
     "prettier-config-rschristian": "^0.1.1"
   },
-  "prettier": "prettier-config-rschristian",
-  "pnpm": {
-    "patchedDependencies": {
-      "@preact/preset-vite@2.9.0": "patches/@preact__preset-vite@2.9.0.patch"
-    }
-  }
+  "prettier": "prettier-config-rschristian"
 }
