@@ -15,6 +15,12 @@ export interface ModuleTree {
     dependencies?: ModuleTree[];
 }
 
+export interface ModuleGraph {
+    moduleTree: ModuleTree;
+    moduleCache: ModuleTreeCache;
+    poisonedModules: Set<string>;
+}
+
 // registry
 export interface PackageData {
     name: string;

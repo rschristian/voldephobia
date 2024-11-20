@@ -52,15 +52,12 @@ export async function getPackageData(pkgQuery) {
  * @typedef {import('./types.d.ts').Module} Module
  * @typedef {import('./types.d.ts').ModuleTree} ModuleTree
  * @typedef {import('./types.d.ts').ModuleTreeCache} ModuleTreeCache
+ * @typedef {import('./types.d.ts').ModuleGraph} ModuleGraph
  */
 
 /**
  * @param {string} query
- * @returns {Promise<{
-     * moduleTree: ModuleTree,
-     * moduleCache: ModuleTreeCache,
-     * poisonedModules: Set<string>,
- * }>}
+ * @returns {Promise<ModuleGraph>}
  */
 async function walkModuleGraph(query) {
     /** @type {ModuleTreeCache} */
