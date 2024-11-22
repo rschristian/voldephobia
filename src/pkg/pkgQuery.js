@@ -23,25 +23,29 @@ export async function getPackageData(pkgQuery) {
         nodeCount: 0,
     }
 
-    for (const query of pkgQueries) {
-        if (!query) errorResponse('Missing package query');
-        if (!/^(?:@.+\/[a-z]|[a-z])/.test(query))
-            errorResponse(
-                'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
-            );
+    const buildModuleTree = async (iter) => {
+        for (const query of iter) {
+            try {
+                if (!query) errorResponse('Missing package query');
+                if (!/^(?:@.+\/[a-z]|[a-z])/.test(query))
+                    errorResponse(
+                        'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
+                    );
+                const { moduleTree, moduleCache, poisonedModules: pModules } = await walkModuleGraph(query);
 
-        try {
-            const { moduleTree, moduleCache, poisonedModules: pModules } = await walkModuleGraph(query);
+                moduleTrees.push(moduleTree);
+                stats.nodeCount += moduleTree.nodeCount;
 
-            moduleTrees.push(moduleTree);
-            stats.nodeCount += moduleTree.nodeCount;
-
-            uniqueModules = new Set([...uniqueModules, ...moduleCache.keys()]);
-            poisonedModules = new Set([...poisonedModules, ...pModules]);
-        } catch (e) {
-            errorResponse(e.message);
+                uniqueModules = new Set([...uniqueModules, ...moduleCache.keys()]);
+                poisonedModules = new Set([...poisonedModules, ...pModules]);
+            } catch (e) {
+                errorResponse(e.message);
+            }
         }
-    }
+    };
+
+    await Promise.all(Array(5).fill(pkgQueries.values()).map(buildModuleTree));
+    moduleTrees.sort((a, b) => a.name.localeCompare(b.name));
 
     stats.moduleCount = uniqueModules.size;
     stats.poisonedModuleCount = poisonedModules.size;
@@ -93,16 +97,22 @@ async function walkModuleGraph(query) {
 
         if (shouldWalk) {
             parentNodes.add(info.name);
-            // `Promise.all(deps.map(...))` would be a bit faster but results in an
-            // unstable dependency order -- refresh the page and things will shift.
-            //
-            // For now, I find that undesirable, but it's an option for the future.
-            for (const dep of deps) {
-                const module = await getModuleData(dep.name, dep.version);
-                const moduleTree = await _walk(module);
-                info.nodeCount += moduleTree.nodeCount;
-                info.dependencies.push(moduleTree);
-            }
+            // Trying to be a respectful user; increasing this speeds
+            // up the process considerably but we might already be
+            // encroaching on the rate limits.
+            await Promise.all(
+                Array(2)
+                    .fill(deps.values())
+                    .map(async (deps) => {
+                        for (const dep of deps) {
+                            const module = await getModuleData(dep.name, dep.version);
+                            const moduleTree = await _walk(module);
+                            info.nodeCount += moduleTree.nodeCount;
+                            info.dependencies.push(moduleTree);
+                        }
+                    }),
+            );
+            info.dependencies?.sort((a, b) => a.name.localeCompare(b.name));
             parentNodes.delete(info.name);
         }
         moduleCache.set(module.key, info);
