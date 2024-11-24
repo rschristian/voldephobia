@@ -21,7 +21,7 @@ export async function getPackageData(pkgQuery) {
         moduleCount: 0,
         poisonedModuleCount: 0,
         nodeCount: 0,
-    }
+    };
 
     const buildModuleTree = async (iter) => {
         for (const query of iter) {
@@ -31,7 +31,11 @@ export async function getPackageData(pkgQuery) {
                     errorResponse(
                         'Invalid package query, see: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#name',
                     );
-                const { moduleTree, moduleCache, poisonedModules: pModules } = await walkModuleGraph(query);
+                const {
+                    moduleTree,
+                    moduleCache,
+                    poisonedModules: pModules,
+                } = await walkModuleGraph(query);
 
                 moduleTrees.push(moduleTree);
                 stats.nodeCount += moduleTree.nodeCount;

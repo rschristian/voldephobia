@@ -28,7 +28,10 @@ export function PackageForm({ setQueryResult, fetchPkgTree }) {
 
     useEffect(() => {
         if (formRef.current) {
-            const defaultValue = (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('q')) || '';
+            const defaultValue =
+                (typeof window !== 'undefined' &&
+                    new URLSearchParams(window.location.search).get('q')) ||
+                '';
             formRef.current[0].defaultValue = defaultValue;
         }
     }, []);
