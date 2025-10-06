@@ -5,6 +5,7 @@ import { withTwind } from '@rschristian/twind-preact-iso';
 import { getPackageData } from './pkg/pkgQuery.js';
 import { PackageForm } from './components/Form.jsx';
 import { DataBox } from './components/DataBox.jsx';
+import { twindConfig } from './styles/twind.config.js';
 
 export function App() {
     const [queryResult, setQueryResult] = useState(null);
@@ -70,7 +71,7 @@ export function App() {
 }
 
 const { hydrate, prerender } = withTwind(
-    () => import('./styles/twind.config.js'),
+    twindConfig,
     () => <App />,
     true,
 );

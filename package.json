@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@rschristian/intrepid-design": "^0.1.5",
-    "@rschristian/twind-preact-iso": "^0.4.0",
+    "@rschristian/twind-preact-iso": "^0.6.0",
     "@sovereignjs/core": "^0.1.4",
     "@twind/core": "^1.1.3",
     "@twind/preset-tailwind": "^1.1.4",
